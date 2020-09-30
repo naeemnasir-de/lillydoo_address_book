@@ -28,10 +28,13 @@ class ContactType extends AbstractType
             ->add('picture', FileType::class, ['required' => false, 'data_class' => null]);
     }
 
+
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Contact::class,
-        ]);
+        $resolver->setDefaults(
+            [
+                'data_class' => Contact::class,
+            ]
+        );
     }
 }

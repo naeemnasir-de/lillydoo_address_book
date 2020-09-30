@@ -3,11 +3,10 @@
 namespace ContactBundle\Repository;
 
 use ContactBundle\Controller\ContactApiController;
-use Knp\Component\Pager\Paginator;
-use Psr\Container\ContainerInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use ContactBundle\Entity\Contact;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Psr\Container\ContainerInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * ContactRepository
@@ -22,9 +21,11 @@ class ContactRepository extends ServiceEntityRepository
      */
     private $container;
 
+
     /**
      * ProfilesRepository constructor.
-     * @param RegistryInterface $registry
+     *
+     * @param RegistryInterface  $registry
      * @param ContainerInterface $container
      */
     public function __construct(RegistryInterface $registry, ContainerInterface $container)
@@ -33,10 +34,12 @@ class ContactRepository extends ServiceEntityRepository
         parent::__construct($registry, Contact::class);
     }
 
+
     /**
      * This method add contact entity
      *
      * @param Contact $contact
+     *
      * @return bool
      */
     public function createOrUpdate(Contact $contact): bool
@@ -46,16 +49,19 @@ class ContactRepository extends ServiceEntityRepository
             $this->_em->flush($contact);
 
             return true;
-        } catch (\Doctrine\ORM\ORMException | \Exception | \Doctrine\ORM\OptimisticLockException $e) {
+        }
+        catch (\Doctrine\ORM\ORMException | \Exception | \Doctrine\ORM\OptimisticLockException $e) {
 
             return false;
         }
     }
 
+
     /**
      * This method delete contact entity
      *
      * @param Contact $contact
+     *
      * @return bool
      */
     public function delete(Contact $contact): bool
@@ -65,16 +71,19 @@ class ContactRepository extends ServiceEntityRepository
             $this->_em->flush($contact);
 
             return true;
-        } catch (\Doctrine\ORM\ORMException | \Exception | \Doctrine\ORM\OptimisticLockException $e) {
+        }
+        catch (\Doctrine\ORM\ORMException | \Exception | \Doctrine\ORM\OptimisticLockException $e) {
 
             return false;
         }
     }
 
+
     /**
      * Search contact with specific filters
      *
      * @param array $search
+     *
      * @return array
      */
     public function search(array $search): array
@@ -90,7 +99,9 @@ class ContactRepository extends ServiceEntityRepository
 
         if ($search[ContactApiController::ADDRESS]) {
             $query = $query
-                ->andWhere('c.street LIKE :contactAddress OR c.zip LIKE :contactAddress OR c.city LIKE :contactAddress OR c.country LIKE :contactAddress')
+                ->andWhere(
+                    'c.street LIKE :contactAddress OR c.zip LIKE :contactAddress OR c.city LIKE :contactAddress OR c.country LIKE :contactAddress'
+                )
                 ->setParameter(ContactApiController::ADDRESS, '%' . $search[ContactApiController::ADDRESS] . '%');
         }
 
@@ -101,13 +112,14 @@ class ContactRepository extends ServiceEntityRepository
         }
 
 
-
         return $query->getQuery()->getArrayResult();
     }
+
 
     /**
      * @param int $from
      * @param int $to
+     *
      * @return mixed
      */
     public function getContacts(int $from, int $to)

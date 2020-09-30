@@ -1,9 +1,4 @@
 $(document).ready(function () {
-
-
-
-
-
     $(function () {
         $("#contact_dateOfBirth").datepicker({
             changeMonth: true,

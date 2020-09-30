@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * This service responsible to manage contacts
  *
  * Class ContactService
+ *
  * @package ContactBundle\Services
  *
  */
@@ -27,10 +28,12 @@ class ContactService
      */
     private $contactRepository;
 
+
     /**
      * ContactService constructor.
+     *
      * @param FileUploaderService $fileUploaderService
-     * @param ContactRepository $contactRepository
+     * @param ContactRepository   $contactRepository
      *
      */
     public function __construct(
@@ -39,13 +42,15 @@ class ContactService
     )
     {
         $this->fileUploaderService = $fileUploaderService;
-        $this->contactRepository = $contactRepository;
+        $this->contactRepository   = $contactRepository;
     }
+
 
     /**
      * This method is responsible to create new contact
      *
      * @param Contact $contact
+     *
      * @return array
      */
     public function createOrUpdate(Contact $contact): array
@@ -55,21 +60,24 @@ class ContactService
 
             return [
                 ContactController::STATUS => JsonResponse::HTTP_CREATED,
-                ContactController::DATA => "Success"
+                ContactController::DATA   => "Success"
             ];
-        } else {
+        }
+        else {
 
             return [
                 ContactController::STATUS => JsonResponse::HTTP_FORBIDDEN,
-                ContactController::DATA => "Operation failed!"
+                ContactController::DATA   => "Operation failed!"
             ];
         }
     }
+
 
     /**
      * This method is used to get entity by Id
      *
      * @param int $id
+     *
      * @return object|null
      */
     public function get(int $id)
@@ -77,10 +85,12 @@ class ContactService
         return $this->contactRepository->find($id);
     }
 
+
     /**
      * This method is responsible to delete contact
      *
      * @param int $id
+     *
      * @return array
      */
     public function delete(int $id): array
@@ -93,7 +103,7 @@ class ContactService
 
             return [
                 ContactApiController::STATUS => JsonResponse::HTTP_NOT_FOUND,
-                ContactApiController::DATA => "Contact not found"
+                ContactApiController::DATA   => "Contact not found"
             ];
         }
 
@@ -111,22 +121,25 @@ class ContactService
 
             return [
                 ContactController::STATUS => JsonResponse::HTTP_OK,
-                ContactController::DATA => "Contact deleted successfully"
+                ContactController::DATA   => "Contact deleted successfully"
             ];
-        } else {
+        }
+        else {
 
             return [
                 ContactController::STATUS => JsonResponse::HTTP_FORBIDDEN,
-                ContactController::DATA => "Contact deleting failed"
+                ContactController::DATA   => "Contact deleting failed"
             ];
         }
 
     }
 
+
     /**
      * This method is responsible to delete contact's picture
      *
      * @param int $id
+     *
      * @return array
      */
     public function deletePicture(int $id): array
@@ -139,7 +152,7 @@ class ContactService
 
             return [
                 ContactApiController::STATUS => JsonResponse::HTTP_NOT_FOUND,
-                ContactApiController::DATA => "Contact not found"
+                ContactApiController::DATA   => "Contact not found"
             ];
         }
 
@@ -147,7 +160,7 @@ class ContactService
         if ($picture === null) {
             return [
                 ContactApiController::STATUS => JsonResponse::HTTP_FORBIDDEN,
-                ContactApiController::DATA => "Picture not found"
+                ContactApiController::DATA   => "Picture not found"
             ];
         }
 
@@ -163,21 +176,23 @@ class ContactService
 
             return [
                 ContactApiController::STATUS => JsonResponse::HTTP_FORBIDDEN,
-                ContactApiController::DATA => "Picture updating failed"
+                ContactApiController::DATA   => "Picture updating failed"
             ];
         }
 
         return [
             ContactApiController::STATUS => JsonResponse::HTTP_OK,
-            ContactApiController::DATA => "Picture deleted successfully"
+            ContactApiController::DATA   => "Picture deleted successfully"
         ];
 
     }
+
 
     /**
      * This method is responsible to search contact with specific parameters.
      *
      * @param array $search
+     *
      * @return array
      */
     public function search(array $search): array
@@ -186,14 +201,17 @@ class ContactService
 
         return [
             ContactApiController::STATUS => JsonResponse::HTTP_OK,
-            ContactApiController::DATA => $contact
+            ContactApiController::DATA   => $contact
         ];
     }
 
+
     /**
      * This method is responsible to list all contact.
+     *
      * @param int $from
      * @param int $to
+     *
      * @return mixed
      */
     public function getPaginatedContacts(int $from, int $to)

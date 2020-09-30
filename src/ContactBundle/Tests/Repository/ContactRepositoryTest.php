@@ -8,14 +8,13 @@ use ContactBundle\Repository\ContactRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\Paginator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
 
 class ContactRepositoryTest extends TestCase
 {
@@ -35,15 +34,19 @@ class ContactRepositoryTest extends TestCase
      */
     private $contactRepository;
 
+    /**
+     * @var EntityManager
+     */
     private $em;
+
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->registry = $this->createMock(RegistryInterface::class);
+        $this->registry  = $this->createMock(RegistryInterface::class);
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->em = $this->createMock(EntityManager::class);
+        $this->em        = $this->createMock(EntityManager::class);
         $this->em->expects(static::once())
             ->method('getClassMetadata')
             ->willReturn($classMeta = $this->createMock(ClassMetadata::class));
@@ -58,6 +61,7 @@ class ContactRepositoryTest extends TestCase
         );
     }
 
+
     public function testCreateOrUpdate(): void
     {
         $this->em->expects(static::once())
@@ -69,6 +73,7 @@ class ContactRepositoryTest extends TestCase
 
         static::assertTrue($this->contactRepository->createOrUpdate($contact));
     }
+
 
     public function testCreateOrUpdateWithException(): void
     {
@@ -83,6 +88,7 @@ class ContactRepositoryTest extends TestCase
         static::assertFalse($this->contactRepository->createOrUpdate($contact));
     }
 
+
     public function testDelete(): void
     {
         $this->em->expects(static::once())
@@ -94,6 +100,7 @@ class ContactRepositoryTest extends TestCase
 
         static::assertTrue($this->contactRepository->delete($contact));
     }
+
 
     public function testDeleteWithException(): void
     {
@@ -107,6 +114,7 @@ class ContactRepositoryTest extends TestCase
 
         static::assertFalse($this->contactRepository->delete($contact));
     }
+
 
     public function testSearch(): void
     {
@@ -148,11 +156,14 @@ class ContactRepositoryTest extends TestCase
 
         static::assertEquals(
             [],
-            $this->contactRepository->search([
-                ContactApiController::NAME => 'name',
-                ContactApiController::ADDRESS => 'address',
-                ContactApiController::EMAIL => '11'
-            ]));
+            $this->contactRepository->search(
+                [
+                    ContactApiController::NAME    => 'name',
+                    ContactApiController::ADDRESS => 'address',
+                    ContactApiController::EMAIL   => '11'
+                ]
+            )
+        );
     }
 
 

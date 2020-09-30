@@ -19,6 +19,7 @@ class FileUploaderServiceTest extends TestCase
      * @var MockObject | ContainerInterface
      */
     private $container;
+
     /**
      * @var MockObject | Filesystem
      */
@@ -29,17 +30,19 @@ class FileUploaderServiceTest extends TestCase
      */
     private $fileUploaderService;
 
+
     public function setUp(): void
     {
         parent::setUp();
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->file = $this->createMock(Filesystem::class);
+        $this->file      = $this->createMock(Filesystem::class);
 
         $this->fileUploaderService = new FileUploaderService(
             $this->container,
             $this->file
         );
     }
+
 
     public function testUpload(): void
     {
@@ -79,6 +82,7 @@ class FileUploaderServiceTest extends TestCase
         );
     }
 
+
     public function testUploadWithInvalidExtension(): void
     {
         $this->container->expects(static::exactly(1))
@@ -108,6 +112,7 @@ class FileUploaderServiceTest extends TestCase
             $result[ContactController::STATUS]
         );
     }
+
 
     public function testUploadWithException(): void
     {
@@ -146,6 +151,7 @@ class FileUploaderServiceTest extends TestCase
         );
     }
 
+
     public function testDelete(): void
     {
         $this->container->expects(static::once())
@@ -160,11 +166,12 @@ class FileUploaderServiceTest extends TestCase
         static::assertEquals(
             [
                 ContactController::STATUS => JsonResponse::HTTP_OK,
-                ContactController::DATA => "File removed"
+                ContactController::DATA   => "File removed"
             ],
             $this->fileUploaderService->delete('file.jpg')
         );
     }
+
 
     public function testDeleteWithException(): void
     {

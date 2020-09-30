@@ -30,17 +30,19 @@ class ContactServiceTest extends TestCase
      */
     private $contactService;
 
+
     public function setUp(): void
     {
         parent::setUp();
         $this->fileUploaderService = $this->createMock(FileUploaderService::class);
-        $this->contactRepository = $this->createMock(ContactRepository::class);
+        $this->contactRepository   = $this->createMock(ContactRepository::class);
 
         $this->contactService = new ContactService(
             $this->fileUploaderService,
             $this->contactRepository
         );
     }
+
 
     public function testCreateOrUpdate(): void
     {
@@ -53,11 +55,12 @@ class ContactServiceTest extends TestCase
         static::assertEquals(
             [
                 ContactController::STATUS => JsonResponse::HTTP_CREATED,
-                ContactController::DATA => "Success"
+                ContactController::DATA   => "Success"
             ],
             $this->contactService->createOrUpdate($contact)
         );
     }
+
 
     public function testCreateOrUpdateFail(): void
     {
@@ -70,29 +73,33 @@ class ContactServiceTest extends TestCase
         static::assertEquals(
             [
                 ContactController::STATUS => JsonResponse::HTTP_FORBIDDEN,
-                ContactController::DATA => "Operation failed!"
+                ContactController::DATA   => "Operation failed!"
             ],
             $this->contactService->createOrUpdate($contact)
         );
     }
 
+
     public function testGet(): void
     {
         $contact = $this->createMock(Contact::class);
-        $id = rand(1000, 9999);
+        $id      = rand(1000, 9999);
         $this->contactRepository->expects(static::once())
             ->method('find')
             ->with(static::equalTo($id))
             ->willReturn($contact);
 
-        static::assertEquals($contact, $this->contactService->get($id)
+        static::assertEquals(
+            $contact,
+            $this->contactService->get($id)
         );
     }
+
 
     public function testDelete(): void
     {
         $contact = $this->createMock(Contact::class);
-        $id = rand(1000, 9999);
+        $id      = rand(1000, 9999);
         $this->contactRepository->expects(static::once())
             ->method('find')
             ->with(static::equalTo($id))
@@ -105,26 +112,32 @@ class ContactServiceTest extends TestCase
         $this->fileUploaderService->expects(static::once())
             ->method('delete')
             ->with(static::equalTo('picture-name.jpg'))
-            ->willReturn([
-                ContactController::STATUS => JsonResponse::HTTP_OK,
-                ContactController::DATA => "File removed"
-            ]);
+            ->willReturn(
+                [
+                    ContactController::STATUS => JsonResponse::HTTP_OK,
+                    ContactController::DATA   => "File removed"
+                ]
+            );
 
         $this->contactRepository->expects(static::once())
             ->method('delete')
             ->with($contact)
             ->willReturn(true);
 
-        static::assertEquals([
-            ContactController::STATUS => JsonResponse::HTTP_OK,
-            ContactController::DATA => "Contact deleted successfully"
-        ], $this->contactService->delete($id));
+        static::assertEquals(
+            [
+                ContactController::STATUS => JsonResponse::HTTP_OK,
+                ContactController::DATA   => "Contact deleted successfully"
+            ],
+            $this->contactService->delete($id)
+        );
     }
+
 
     public function testDeleteWithoutPicture(): void
     {
         $contact = $this->createMock(Contact::class);
-        $id = rand(1000, 9999);
+        $id      = rand(1000, 9999);
         $this->contactRepository->expects(static::once())
             ->method('find')
             ->with(static::equalTo($id))
@@ -142,16 +155,20 @@ class ContactServiceTest extends TestCase
             ->with($contact)
             ->willReturn(true);
 
-        static::assertEquals([
-            ContactController::STATUS => JsonResponse::HTTP_OK,
-            ContactController::DATA => "Contact deleted successfully"
-        ], $this->contactService->delete($id));
+        static::assertEquals(
+            [
+                ContactController::STATUS => JsonResponse::HTTP_OK,
+                ContactController::DATA   => "Contact deleted successfully"
+            ],
+            $this->contactService->delete($id)
+        );
     }
+
 
     public function testDeleteWithPictureDeletingFailed(): void
     {
         $contact = $this->createMock(Contact::class);
-        $id = rand(1000, 9999);
+        $id      = rand(1000, 9999);
         $this->contactRepository->expects(static::once())
             ->method('find')
             ->with(static::equalTo($id))
@@ -164,24 +181,30 @@ class ContactServiceTest extends TestCase
         $this->fileUploaderService->expects(static::once())
             ->method('delete')
             ->with(static::equalTo('picture-name.jpg'))
-            ->willReturn([
-                ContactController::STATUS => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                ContactController::DATA => 'Exception'
-            ]);
+            ->willReturn(
+                [
+                    ContactController::STATUS => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
+                    ContactController::DATA   => 'Exception'
+                ]
+            );
 
         $this->contactRepository->expects(static::never())
             ->method('delete');
 
-        static::assertEquals([
-            ContactController::STATUS => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-            ContactController::DATA => 'Exception'
-        ], $this->contactService->delete($id));
+        static::assertEquals(
+            [
+                ContactController::STATUS => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
+                ContactController::DATA   => 'Exception'
+            ],
+            $this->contactService->delete($id)
+        );
     }
+
 
     public function testDeleteFail(): void
     {
         $contact = $this->createMock(Contact::class);
-        $id = rand(1000, 9999);
+        $id      = rand(1000, 9999);
         $this->contactRepository->expects(static::once())
             ->method('find')
             ->with(static::equalTo($id))
@@ -194,26 +217,32 @@ class ContactServiceTest extends TestCase
         $this->fileUploaderService->expects(static::once())
             ->method('delete')
             ->with(static::equalTo('picture-name.jpg'))
-            ->willReturn([
-                ContactController::STATUS => JsonResponse::HTTP_OK,
-                ContactController::DATA => "File removed"
-            ]);
+            ->willReturn(
+                [
+                    ContactController::STATUS => JsonResponse::HTTP_OK,
+                    ContactController::DATA   => "File removed"
+                ]
+            );
 
         $this->contactRepository->expects(static::once())
             ->method('delete')
             ->with($contact)
             ->willReturn(false);
 
-        static::assertEquals([
-            ContactController::STATUS => JsonResponse::HTTP_FORBIDDEN,
-            ContactController::DATA => "Contact deleting failed"
-        ], $this->contactService->delete($id));
+        static::assertEquals(
+            [
+                ContactController::STATUS => JsonResponse::HTTP_FORBIDDEN,
+                ContactController::DATA   => "Contact deleting failed"
+            ],
+            $this->contactService->delete($id)
+        );
     }
+
 
     public function testDeletePicture(): void
     {
         $contact = $this->createMock(Contact::class);
-        $id = rand(1000, 9999);
+        $id      = rand(1000, 9999);
         $this->contactRepository->expects(static::once())
             ->method('find')
             ->with(static::equalTo($id))
@@ -226,10 +255,12 @@ class ContactServiceTest extends TestCase
         $this->fileUploaderService->expects(static::once())
             ->method('delete')
             ->with(static::equalTo('picture-name.png'))
-            ->willReturn([
-                ContactApiController::STATUS => JsonResponse::HTTP_OK,
-                ContactApiController::DATA => "File removed"
-            ]);
+            ->willReturn(
+                [
+                    ContactApiController::STATUS => JsonResponse::HTTP_OK,
+                    ContactApiController::DATA   => "File removed"
+                ]
+            );
 
         $contact->expects(static::once())
             ->method('setPicture')
@@ -241,17 +272,21 @@ class ContactServiceTest extends TestCase
             ->with(static::equalTo($contact))
             ->willReturn(true);
 
-        static::assertEquals([
-            ContactApiController::STATUS => JsonResponse::HTTP_OK,
-            ContactApiController::DATA => "Picture deleted successfully"
-        ], $this->contactService->deletePicture($id));
+        static::assertEquals(
+            [
+                ContactApiController::STATUS => JsonResponse::HTTP_OK,
+                ContactApiController::DATA   => "Picture deleted successfully"
+            ],
+            $this->contactService->deletePicture($id)
+        );
 
     }
+
 
     public function testDeletePictureWithContactNotFound(): void
     {
         $contact = $this->createMock(Contact::class);
-        $id = rand(1000, 9999);
+        $id      = rand(1000, 9999);
         $this->contactRepository->expects(static::once())
             ->method('find')
             ->with(static::equalTo($id))
@@ -269,17 +304,21 @@ class ContactServiceTest extends TestCase
         $this->contactRepository->expects(static::never())
             ->method('createOrUpdate');
 
-        static::assertEquals([
-            ContactApiController::STATUS => JsonResponse::HTTP_NOT_FOUND,
-            ContactApiController::DATA => "Contact not found"
-        ], $this->contactService->deletePicture($id));
+        static::assertEquals(
+            [
+                ContactApiController::STATUS => JsonResponse::HTTP_NOT_FOUND,
+                ContactApiController::DATA   => "Contact not found"
+            ],
+            $this->contactService->deletePicture($id)
+        );
 
     }
+
 
     public function testDeletePictureWithoutPicture(): void
     {
         $contact = $this->createMock(Contact::class);
-        $id = rand(1000, 9999);
+        $id      = rand(1000, 9999);
         $this->contactRepository->expects(static::once())
             ->method('find')
             ->with(static::equalTo($id))
@@ -298,17 +337,21 @@ class ContactServiceTest extends TestCase
         $this->contactRepository->expects(static::never())
             ->method('createOrUpdate');
 
-        static::assertEquals([
-            ContactApiController::STATUS => JsonResponse::HTTP_FORBIDDEN,
-            ContactApiController::DATA => "Picture not found"
-        ], $this->contactService->deletePicture($id));
+        static::assertEquals(
+            [
+                ContactApiController::STATUS => JsonResponse::HTTP_FORBIDDEN,
+                ContactApiController::DATA   => "Picture not found"
+            ],
+            $this->contactService->deletePicture($id)
+        );
 
     }
+
 
     public function testDeletePictureWithPictureDeletingFailed(): void
     {
         $contact = $this->createMock(Contact::class);
-        $id = rand(1000, 9999);
+        $id      = rand(1000, 9999);
         $this->contactRepository->expects(static::once())
             ->method('find')
             ->with(static::equalTo($id))
@@ -321,10 +364,12 @@ class ContactServiceTest extends TestCase
         $this->fileUploaderService->expects(static::once())
             ->method('delete')
             ->with(static::equalTo('picture-name.png'))
-            ->willReturn([
-                ContactApiController::STATUS => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                ContactApiController::DATA => 'Exception'
-            ]);
+            ->willReturn(
+                [
+                    ContactApiController::STATUS => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
+                    ContactApiController::DATA   => 'Exception'
+                ]
+            );
 
         $contact->expects(static::never())
             ->method('setPicture');
@@ -332,17 +377,21 @@ class ContactServiceTest extends TestCase
         $this->contactRepository->expects(static::never())
             ->method('createOrUpdate');
 
-        static::assertEquals([
-            ContactApiController::STATUS => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-            ContactApiController::DATA => 'Exception'
-        ], $this->contactService->deletePicture($id));
+        static::assertEquals(
+            [
+                ContactApiController::STATUS => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
+                ContactApiController::DATA   => 'Exception'
+            ],
+            $this->contactService->deletePicture($id)
+        );
 
     }
+
 
     public function testDeletePictureWithRecordUpdatingFailed(): void
     {
         $contact = $this->createMock(Contact::class);
-        $id = rand(1000, 9999);
+        $id      = rand(1000, 9999);
         $this->contactRepository->expects(static::once())
             ->method('find')
             ->with(static::equalTo($id))
@@ -355,10 +404,12 @@ class ContactServiceTest extends TestCase
         $this->fileUploaderService->expects(static::once())
             ->method('delete')
             ->with(static::equalTo('picture-name.png'))
-            ->willReturn([
-                ContactApiController::STATUS => JsonResponse::HTTP_OK,
-                ContactApiController::DATA => "File removed"
-            ]);
+            ->willReturn(
+                [
+                    ContactApiController::STATUS => JsonResponse::HTTP_OK,
+                    ContactApiController::DATA   => "File removed"
+                ]
+            );
 
         $contact->expects(static::once())
             ->method('setPicture')
@@ -370,12 +421,16 @@ class ContactServiceTest extends TestCase
             ->with(static::equalTo($contact))
             ->willReturn(false);
 
-        static::assertEquals([
-            ContactApiController::STATUS => JsonResponse::HTTP_FORBIDDEN,
-            ContactApiController::DATA => "Picture updating failed"
-        ], $this->contactService->deletePicture($id));
+        static::assertEquals(
+            [
+                ContactApiController::STATUS => JsonResponse::HTTP_FORBIDDEN,
+                ContactApiController::DATA   => "Picture updating failed"
+            ],
+            $this->contactService->deletePicture($id)
+        );
 
     }
+
 
     public function testSearch(): void
     {
@@ -387,7 +442,7 @@ class ContactServiceTest extends TestCase
 
         $response = [
             'firstName' => 'first name',
-            'lastName' => 'last name'
+            'lastName'  => 'last name'
         ];
 
         $this->contactRepository->expects(static::once())
@@ -395,11 +450,15 @@ class ContactServiceTest extends TestCase
             ->with(static::equalTo($search))
             ->willReturn($response);
 
-        static::assertEquals([
-            ContactApiController::STATUS => JsonResponse::HTTP_OK,
-            ContactApiController::DATA => $response
-        ], $this->contactService->search($search));
+        static::assertEquals(
+            [
+                ContactApiController::STATUS => JsonResponse::HTTP_OK,
+                ContactApiController::DATA   => $response
+            ],
+            $this->contactService->search($search)
+        );
     }
+
 
     public function testGetPaginatedContacts(): void
     {

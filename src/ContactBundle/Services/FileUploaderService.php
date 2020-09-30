@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * This service is responsible to manage picture (upload, delete)
  *
  * Class FileUploaderService
+ *
  * @package ContactBundle\Services
  */
 class FileUploaderService
@@ -32,39 +33,45 @@ class FileUploaderService
      * @var ContainerInterface
      */
     private $container;
+
     /**
      * @var Filesystem
      */
     private $file;
 
+
     /**
      * FileUploaderService constructor.
+     *
      * @param ContainerInterface $container
-     * @param Filesystem $file
+     * @param Filesystem         $file
      */
     public function __construct(
         ContainerInterface $container,
         Filesystem $file
-    ) {
+    )
+    {
         $this->container = $container;
-        $this->file = $file;
+        $this->file      = $file;
     }
+
 
     /**
      * This method is responsible to upload picture
      *
      * @param UploadedFile $file
+     *
      * @return array
      */
     public function upload(UploadedFile $file): array
     {
         $supportedImageTypes = $this->container->getParameter(self::IMG_TYPE_PARAM);
-        $fileExtension = $file->guessExtension();
+        $fileExtension       = $file->guessExtension();
         if (!\in_array($fileExtension, $supportedImageTypes)) {
 
             return [
                 ContactController::STATUS => JsonResponse::HTTP_FORBIDDEN,
-                ContactController::DATA => "Invalid type, supported types are : " . \implode(", ", $supportedImageTypes)
+                ContactController::DATA   => "Invalid type, supported types are : " . \implode(", ", $supportedImageTypes)
             ];
         }
 
@@ -75,13 +82,14 @@ class FileUploaderService
 
             return [
                 ContactController::STATUS => JsonResponse::HTTP_CREATED,
-                ContactController::DATA => $fileName
+                ContactController::DATA   => $fileName
             ];
-        } catch (FileException $e) {
+        }
+        catch (FileException $e) {
 
             return [
                 ContactController::STATUS => JsonResponse::HTTP_FORBIDDEN,
-                ContactController::DATA => $e->getMessage()
+                ContactController::DATA   => $e->getMessage()
             ];
         }
     }
@@ -91,6 +99,7 @@ class FileUploaderService
      *This method is responsible to delete picture
      *
      * @param $picture
+     *
      * @return array
      */
     public function delete($picture): array
@@ -100,12 +109,13 @@ class FileUploaderService
             $this->file->remove($path);
             return [
                 ContactController::STATUS => JsonResponse::HTTP_OK,
-                ContactController::DATA => "File removed"
+                ContactController::DATA   => "File removed"
             ];
-        } catch (FileException $e) {
+        }
+        catch (FileException $e) {
             return [
                 ContactController::STATUS => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                ContactController::DATA => $e->getMessage()
+                ContactController::DATA   => $e->getMessage()
             ];
         }
 
