@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  ContactBundle\Services\FileUploaderService:
+    autowire: true
+
+  ContactBundle\Services\ContactService:
+    autowire: true

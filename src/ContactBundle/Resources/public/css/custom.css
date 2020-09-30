@@ -1,0 +1,64 @@
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+.row.content {height: 800px}
+.sidenav {
+    padding-top: 20px;
+    background-color: #f1f1f1;
+    height: 100%;
+}
+
+footer {
+    background-color: #555;
+    color: white;
+    padding: 15px;
+}
+
+@media screen and (max-width: 767px) {
+    .sidenav {
+        height: auto;
+        padding: 15px;
+    }
+    .row.content {height:auto;}
+}
+
+#contact div label {
+    width:100%;
+}
+
+#contact div ul li {
+    color:red;
+}
+
+label.required:after {
+    content: " *";
+    color: red;
+}
+
+#contact div input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#contact div button {
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    background-color: #008CBA;
+    padding: 10px 35px;
+    border-radius: 8px;
+}
+
+.container-fluid {
+    padding-bottom: 15px;
+}
+
